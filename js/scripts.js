@@ -1,10 +1,9 @@
-let employeeList = [];
-
 fetch('https://randomuser.me/api/?results=12&nat=us')
   .then(res => res.json())
   .then(info => employeeList = info )
   .then(data => generateGallery(data.results))
 
+let employeeList = [];
 const gallery = document.getElementById('gallery');
 const body = document.querySelector('body');
 
@@ -46,10 +45,68 @@ function displayModal(index) {
           <p class="modal-text">Birthday: ${dobFormat}</p>
         </div>
       </div>
+      <div class="modal-btn-container">
+        <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+        <button type="button" id="modal-next" class="modal-next btn">Next</button>
+      </div>
     </div>
     `;
   body.insertAdjacentHTML('beforeend', modal);
 }
+
+// <!-- =======================
+// Modal markup:
+//     // IMPORTANT: Below is only for exceeds tasks 
+//     <div class="modal-btn-container">
+//         <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+//         <button type="button" id="modal-next" class="modal-next btn">Next</button>
+//     </div>
+// </div>
+// ======================== -->
+
+const searchContainer = document.querySelector('.search-container');
+searchContainer.insertAdjacentHTML('beforeend', `
+<form action="#" method="get">
+  <input type="search" id="search-input" class="search-input" placeholder="Search...">
+  <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+</form>
+`)
+let searchButton = document.getElementById('search-submit')
+let searchInput = '';
+
+
+searchButton.addEventListener('click', e => {
+  e.preventDefault();
+  searchInput = document.getElementById('search-input').value.toLowerCase();
+
+  for(let i = 0; i < gallery.children.length; i++) {
+    let onScreenNames = gallery.children[i].children[1].children[0].textContent.toLowerCase();
+    if(onScreenNames.includes(searchInput)) {
+      gallery.children[i].setAttribute('style', 'display: flex')
+    } else if(!(onScreenNames.includes(searchInput))) {
+      gallery.children[i].setAttribute('style', 'display: none')
+    }
+  
+  }
+  console.log('button is working')
+
+});
+
+searchContainer.addEventListener('keyup', e => {
+  e.preventDefault();
+  searchInput = document.getElementById('search-input').value.toLowerCase();
+
+  for(let i = 0; i < gallery.children.length; i++) {
+    let onScreenNames = gallery.children[i].children[1].children[0].textContent.toLowerCase();
+    if(onScreenNames.includes(searchInput)) {
+      gallery.children[i].setAttribute('style', 'display: flex')
+    } else if(!(onScreenNames.includes(searchInput))) {
+      gallery.children[i].setAttribute('style', 'display: none')
+    }
+  
+  }
+});
+
 
 gallery.addEventListener('click', e => {
   e.preventDefault();
@@ -81,5 +138,16 @@ gallery.addEventListener('click', e => {
       const modalWindow = document.querySelector('.modal-container');
       modalWindow.remove();
     })
+
+    document.getElementById('modal-prev').addEventListener('click', e => {
+      let index = employees.indexOf(e.target)
+      displayModal(index)
+      console.log('This previous button is working')
+    });
+    document.getElementById('modal-next').addEventListener('click', e => {
+      console.log('This next button is working')
+    });
+
   } 
 });
+
