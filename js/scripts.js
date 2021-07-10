@@ -3,9 +3,27 @@ fetch('https://randomuser.me/api/?results=12&nat=us')
   .then(info => employeeList = info )
   .then(data => generateGallery(data.results))
 
+
+const searchContainer = document.querySelector('.search-container');
+searchContainer.insertAdjacentHTML('beforeend', `
+<form action="#" method="get">
+  <input type="search" id="search-input" class="search-input" placeholder="Search...">
+  <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+</form>
+`)
+let searchButton = document.getElementById('search-submit')
+let searchInput = '';
+
 let employeeList = [];
 const gallery = document.getElementById('gallery');
 const body = document.querySelector('body');
+
+function indexAdd() {
+  const card = document.querySelectorAll('.card')
+  for(let i = 0; i< card.length; i++) {
+    card[i].setAttribute('data-index', [i])
+  }
+}
 
 function generateGallery(data) {
   const employees = data.map(employee => `
@@ -31,7 +49,7 @@ function displayModal(index) {
   let dobFormat = (employee.dob.date).replace(regexDate, '$2/$3/$1')
 
   const modal = `
-    <div class="modal-container">
+    <div class="modal-container" data-index="${index}">
       <div class="modal">
         <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
         <div class="modal-info-container">
@@ -45,35 +63,34 @@ function displayModal(index) {
           <p class="modal-text">Birthday: ${dobFormat}</p>
         </div>
       </div>
-      <div class="modal-btn-container">
-        <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
-        <button type="button" id="modal-next" class="modal-next btn">Next</button>
-      </div>
     </div>
     `;
+    
   body.insertAdjacentHTML('beforeend', modal);
+  if(index === 0) {
+    const modalWindow = document.querySelector('.modal-container')
+    modalWindow.insertAdjacentHTML('beforeend', `
+    <div class="modal-btn-container">
+      <button type="button" id="modal-next" class="modal-next btn">Next</button>
+    </div>
+    `)
+  } else if(index === 11) {
+    const modalWindow = document.querySelector('.modal-container')
+    modalWindow.insertAdjacentHTML('beforeend', `
+    <div class="modal-btn-container">
+      <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+    </div>
+    `)
+  } else {
+    const modalWindow = document.querySelector('.modal-container')
+    modalWindow.insertAdjacentHTML('beforeend', `
+    <div class="modal-btn-container">
+      <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+      <button type="button" id="modal-next" class="modal-next btn">Next</button>
+    </div>
+    `)
+  }
 }
-
-// <!-- =======================
-// Modal markup:
-//     // IMPORTANT: Below is only for exceeds tasks 
-//     <div class="modal-btn-container">
-//         <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
-//         <button type="button" id="modal-next" class="modal-next btn">Next</button>
-//     </div>
-// </div>
-// ======================== -->
-
-const searchContainer = document.querySelector('.search-container');
-searchContainer.insertAdjacentHTML('beforeend', `
-<form action="#" method="get">
-  <input type="search" id="search-input" class="search-input" placeholder="Search...">
-  <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
-</form>
-`)
-let searchButton = document.getElementById('search-submit')
-let searchInput = '';
-
 
 searchButton.addEventListener('click', e => {
   e.preventDefault();
@@ -133,21 +150,25 @@ gallery.addEventListener('click', e => {
 
   }
 
-  if(document.getElementById('modal-close-btn') !== null) {
-    document.getElementById('modal-close-btn').addEventListener('click', () => {
-      const modalWindow = document.querySelector('.modal-container');
-      modalWindow.remove();
-    })
+});
 
-    document.getElementById('modal-prev').addEventListener('click', e => {
-      let index = employees.indexOf(e.target)
-      displayModal(index)
-      console.log('This previous button is working')
-    });
-    document.getElementById('modal-next').addEventListener('click', e => {
-      console.log('This next button is working')
-    });
+document.querySelector('body').addEventListener('click', e => {
 
+  if(document.querySelector('.modal-container') !== null) {
+
+    let index = document.querySelector('.modal-container').getAttribute('data-index')
+    const modalWindow = document.querySelector('.modal-container');
+
+      if(e.target.textContent === "X") {
+        modalWindow.remove();
+      } else if(e.target.textContent === "Prev") {
+        modalWindow.remove();
+        displayModal(parseInt(index) - 1)
+      } else if (e.target.textContent === "Next") {
+        modalWindow.remove();
+        displayModal(parseInt(index) + 1)
+      }
   } 
 });
 
+window.setTimeout(indexAdd, 500);
