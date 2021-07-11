@@ -17,11 +17,13 @@ let searchInput = '';
 let employeeList = [];
 const gallery = document.getElementById('gallery');
 const body = document.querySelector('body');
+const card = document.querySelectorAll('.card');
 
 function indexAdd() {
   const card = document.querySelectorAll('.card')
   for(let i = 0; i< card.length; i++) {
     card[i].setAttribute('data-index', [i])
+    card[i].setAttribute('style', 'display: flex')
   }
 }
 
@@ -67,6 +69,7 @@ function displayModal(index) {
     `;
     
   body.insertAdjacentHTML('beforeend', modal);
+
   if(index === 0) {
     const modalWindow = document.querySelector('.modal-container')
     modalWindow.insertAdjacentHTML('beforeend', `
