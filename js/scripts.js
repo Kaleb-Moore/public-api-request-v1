@@ -52,9 +52,9 @@ function displayModal(index) {
 
   const modal = `
     <div class="modal-container" data-index="${index}">
-      <div class="modal">
+      <div class="modal" style="padding-bottom: 0px">
         <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
-        <div class="modal-info-container">
+        <div class="modal-info-container" style="background: rgba(143, 119, 191, .8); height: 430px">
           <img class="modal-img" src="${employee.picture.large}" alt="profile picture">
           <h3 id="name" class="modal-name cap">${employee.name.first} ${employee.name.last}</h3>
           <p class="modal-text">${employee.email}</p>
@@ -73,21 +73,21 @@ function displayModal(index) {
   if(index === 0) {
     const modalWindow = document.querySelector('.modal-container')
     modalWindow.insertAdjacentHTML('beforeend', `
-    <div class="modal-btn-container">
+    <div class="modal-btn-container" style="background: rgba(112, 86, 163, .8)">
       <button type="button" id="modal-next" class="modal-next btn">Next</button>
     </div>
     `)
   } else if(index === 11) {
     const modalWindow = document.querySelector('.modal-container')
     modalWindow.insertAdjacentHTML('beforeend', `
-    <div class="modal-btn-container">
+    <div class="modal-btn-container" style="background: rgba(112, 86, 163, .8)">
       <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
     </div>
     `)
   } else {
     const modalWindow = document.querySelector('.modal-container')
     modalWindow.insertAdjacentHTML('beforeend', `
-    <div class="modal-btn-container">
+    <div class="modal-btn-container" style="background: rgba(112, 86, 163, .8)">
       <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
       <button type="button" id="modal-next" class="modal-next btn">Next</button>
     </div>
@@ -175,3 +175,4 @@ document.querySelector('body').addEventListener('click', e => {
 });
 
 window.setTimeout(indexAdd, 500);
+
