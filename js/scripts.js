@@ -1,9 +1,17 @@
+/**
+ * Fetch is used to pull information from the random user API
+ * and then parse it into data to be used later. Also catches errors
+ * and sends them to the console.
+ */
 fetch('https://randomuser.me/api/?results=12&nat=us')
   .then(res => res.json())
   .then(info => employeeList = info )
   .then(data => generateGallery(data.results))
+  .catch(err => console.log(Error('Something went wrong', err)));
 
-
+/**
+ * Creates the search field at the top of the page and sets some basic Values
+ */
 const searchContainer = document.querySelector('.search-container');
 searchContainer.insertAdjacentHTML('beforeend', `
 <form action="#" method="get">
@@ -11,14 +19,19 @@ searchContainer.insertAdjacentHTML('beforeend', `
   <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
 </form>
 `)
-let searchButton = document.getElementById('search-submit')
-let searchInput = '';
-
-let employeeList = [];
+const searchButton = document.getElementById('search-submit')
 const gallery = document.getElementById('gallery');
 const body = document.querySelector('body');
 const card = document.querySelectorAll('.card');
+let searchInput = '';
+let employeeList = [];
 
+/**
+ * Adds a data-index to each person on the page as well as
+ * a defualt display of flex. This is used with the modal nav.
+ * It is called at the end of this script with a delay to 
+ * give the users time to be populated.
+ */
 function indexAdd() {
   const card = document.querySelectorAll('.card')
   for(let i = 0; i< card.length; i++) {
@@ -27,6 +40,10 @@ function indexAdd() {
   }
 }
 
+/**
+ * @param {Object Array} data - Iterate over data
+ * and use that to create the users on screen. 
+ */
 function generateGallery(data) {
   const employees = data.map(employee => `
     <div class="card">
@@ -43,6 +60,12 @@ function generateGallery(data) {
   gallery.insertAdjacentHTML('beforeend', employees)
 }
 
+/**
+ * @param {Number} index - uses the number returned to search
+ * through the employeeList array and pull more data on employee
+ * based on the index in that array.
+ * Formats data returned with regex for cell phone and date of birth.
+ */
 function displayModal(index) {
   let employee = employeeList.results[index];
   const regexCell = /^\D*(\d{3})\D*(\d{3})\D*(\d{4})\D*$/
@@ -95,6 +118,13 @@ function displayModal(index) {
   }
 }
 
+/**
+ * Adds and event listener for the button,
+ * after text is entered and button is 
+ * pressed it is compared to on screen 
+ * names and people that don't partially
+ * match are hidden.
+ */
 searchButton.addEventListener('click', e => {
   e.preventDefault();
   searchInput = document.getElementById('search-input').value.toLowerCase();
@@ -112,6 +142,11 @@ searchButton.addEventListener('click', e => {
 
 });
 
+/**
+ * Adds an event listener for the search
+ * field. When you enter a name it updates
+ * the results in real time.
+ */
 searchContainer.addEventListener('keyup', e => {
   e.preventDefault();
   searchInput = document.getElementById('search-input').value.toLowerCase();
@@ -127,7 +162,11 @@ searchContainer.addEventListener('keyup', e => {
   }
 });
 
-
+/**
+ * When clicking on any of the employees
+ * (picture, name or just their box) it 
+ * displays the modal window.
+ */
 gallery.addEventListener('click', e => {
   e.preventDefault();
   const card = gallery.children;
@@ -155,6 +194,12 @@ gallery.addEventListener('click', e => {
 
 });
 
+/**
+ * Handles the changing modal window to the next
+ * or prevs as well as closing the modal window.
+ * I have made sure that it only displays one
+ * window at a time.
+ */
 document.querySelector('body').addEventListener('click', e => {
 
   if(document.querySelector('.modal-container') !== null) {
@@ -174,5 +219,6 @@ document.querySelector('body').addEventListener('click', e => {
   } 
 });
 
-window.setTimeout(indexAdd, 500);
 
+//calls add index after they have loaded.
+window.setTimeout(indexAdd, 800);
